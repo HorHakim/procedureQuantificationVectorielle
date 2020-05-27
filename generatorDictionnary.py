@@ -5,6 +5,7 @@ Author : Cécilia Hakim Zacharie
 """
 
 import cv2
+import math
 import numpy as np
 
 ### Fonctions utiles ###
@@ -14,27 +15,39 @@ def loadImage(pathImage, tailleBloc):
 		à celle des bloc)
 		Elle renvoie aussi le nombre de ligne et de colones de l'image"""
 	imageLoaded = cv2.imread(pathImage)
+	print("Chargement de l'image effectué.")
 	if imageLoaded.shape[0] % tailleBloc  < tailleBloc/2 :
-		numberOfLines = imageLoaded.shape[0] - (imageLoaded.shape[0] % tailleBloc )
+		numberLinesImage = imageLoaded.shape[0] - (imageLoaded.shape[0] % tailleBloc )
 	else :
-		numberOfLines = imageLoaded.shape[0]  - (imageLoaded.shape[0] % tailleBloc) + tailleBloc
+		numberLinesImage = imageLoaded.shape[0]  - (imageLoaded.shape[0] % tailleBloc) + tailleBloc
 	if imageLoaded.shape[1] % tailleBloc  < tailleBloc/2 :
-		numberOfColones = imageLoaded.shape[1] - (imageLoaded.shape[1] % tailleBloc )
+		numberColumnsImage = imageLoaded.shape[1] - (imageLoaded.shape[1] % tailleBloc )
 	else :
-		numberOfColones= imageLoaded.shape[1]  - (imageLoaded.shape[1] % tailleBloc) + tailleBloc
-	image = cv2.resize(imageLoaded,(numberOfColones, numberOfLines))
-	return image, numberOfLines, numberOfColones
+		numberColumnsImage= imageLoaded.shape[1]  - (imageLoaded.shape[1] % tailleBloc) + tailleBloc
+	image = cv2.resize(imageLoaded,(numberColumnsImage, numberLinesImage))
+	print("L'image est maintenant confome pour être cadrillée.")
+	return image, numberLinesImage, numberColumnsImage
 
 
 def blocToFlattenedBloc(bloc):
 	"""Prend en entrée un bloc et renvoie un bloc applati"""
-	tailleBloc = len(bloc)
-	flattenedBloc = []
-	for i in range(tailleBloc):
-		for j in range(tailleBloc):
-			flattenedBloc.append(bloc[i][j])
+	shapeBloc = bloc.shape
+	tailleFlattenedBloc = shapeBloc[0]**2
+	flattenedBloc = np.zeros((tailleFlattenedBloc,3))
+	for i in range(bloc.shape[0]):
+		for j in range(bloc.shape[1]):
+			flattenedBloc[i*bloc.shape[0] + j] = bloc[i][j]
 	return flattenedBloc
 
+
+def flattenedBlocToBloc(flattenedBloc):
+	shapeFlattenedBloc = flattenedBloc.shape
+	tailleBloc = int(math.sqrt(shapeFlattenedBloc[0]))
+	Bloc = np.zeros((tailleBloc, tailleBloc, 3))
+	for i in range(tailleBloc):
+		for j in range(tailleBloc):
+			Bloc[i][j] = flattenedBloc[i*tailleBloc + j]
+	return Bloc
 
 def imageToDictionnaryOfprototype(pathImage, tailleBloc):
 	"""
@@ -42,12 +55,35 @@ def imageToDictionnaryOfprototype(pathImage, tailleBloc):
 		Les blocs applatits sont indexés dans le dictionnaire en fonction de leur position.
 	"""
 	dictionnaryOfprototypes = dict()
-	image, numberOfLines, numberOfColones = loadImage(pathImage, tailleBloc)
-	for i in range(0, numberOfLines, tailleBloc):
-		for j in range(0, numberOfColones, tailleBloc):
+	image, numberLinesImage, numberColumnsImage = loadImage(pathImage, tailleBloc)
+	numberBlocs = (int(numberLinesImage/tailleBloc), int(numberColumnsImage/tailleBloc))
+	dictionnaryOfprototypes["metaData"] = []
+	for i in range(0, numberLinesImage - tailleBloc + 1, tailleBloc):
+		for j in range(0, numberColumnsImage - tailleBloc + 1, tailleBloc):
 				indexOfBloc = str(int(i/tailleBloc)) + "," +  str(int(j/tailleBloc))
 				bloc = image[i : i + tailleBloc, j : j + tailleBloc]
 				flattenedBloc = blocToFlattenedBloc(bloc)
 				dictionnaryOfprototypes[indexOfBloc] = flattenedBloc
+				if i == numberLinesImage - tailleBloc and j == numberColumnsImage - tailleBloc :
+					dictionnaryOfprototypes["metaData"].append(int(i/tailleBloc)+ 1 )
+					dictionnaryOfprototypes["metaData"].append(int(j/tailleBloc)+ 1 )
+	print("Le dictionnaire de prototype est maintenant construit.")
 	return dictionnaryOfprototypes
+
+
+def dictionnaryOfprototypeToImage(dictionnaryOfprototypes, tailleBloc):
+	numberLinesBlocs = dictionnaryOfprototypes["metaData"][0]
+	numberColumnsBlocs = dictionnaryOfprototypes["metaData"][1]
+	numberLinesImage = numberLinesBlocs*tailleBloc
+	numberColumnsImage = numberColumnsBlocs*tailleBloc
+	image = np.zeros((numberLinesImage, numberColumnsImage, 3), np.uint8)
+	for i in range(0, numberLinesImage - tailleBloc + 1, tailleBloc):
+		for j in range(0, numberColumnsImage - tailleBloc + 1, tailleBloc):
+			indexOfBloc = str(int(i/tailleBloc)) + "," +  str(int(j/tailleBloc))
+			flattenedBloc = dictionnaryOfprototypes[indexOfBloc]
+			bloc = flattenedBlocToBloc(flattenedBloc)
+			image[i : i + tailleBloc, j : j + tailleBloc] = bloc
+	print("Image reconstruite")
+	return image
+
 

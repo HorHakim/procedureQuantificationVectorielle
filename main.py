@@ -8,14 +8,8 @@ from Algorithme import *
 ### Variable du programme 
 pathImage = "cartman.png"
 tailleBloc = 16
-
-
-image, numberOfLines, numberOfColones = loadImage(pathImage, tailleBloc)
-cv2.imshow('myImage', image)
-cv2.waitKey(0)
-
+rgb = True
 dictionnaryOfprototypes = imageToDictionnaryOfprototype(pathImage, tailleBloc)
-print(dictionnaryOfprototypes["38,42"][255])
-
-gravityCenterBloc = calculGravityCenterBloc(dictionnaryOfprototypes, tailleBloc, numberOfLines, numberOfColones)
-print(gravityCenterBloc)
+image = dictionnaryOfprototypeToImage(dictionnaryOfprototypes, tailleBloc)
+cv2.imshow('Image Recontruite a partir du dictionnaire de prototypes', image)
+cv2.waitKey(0)
