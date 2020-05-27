@@ -69,10 +69,10 @@ def imageToDictionnaryOfprototype(pathImage, tailleBloc, rgb=False):
 	dictionnaryOfprototypes["metaData"] = []
 	for i in range(0, numberLinesImage - tailleBloc + 1, tailleBloc):
 		for j in range(0, numberColumnsImage - tailleBloc + 1, tailleBloc):
-				indexOfBloc = str(int(i/tailleBloc)) + "," +  str(int(j/tailleBloc))
+				indexBloc = str(int(i/tailleBloc)) + "," +  str(int(j/tailleBloc))
 				bloc = image[i : i + tailleBloc, j : j + tailleBloc]
 				flattenedBloc = blocToFlattenedBloc(bloc, rgb)
-				dictionnaryOfprototypes[indexOfBloc] = flattenedBloc
+				dictionnaryOfprototypes[indexBloc] = flattenedBloc
 				if i == numberLinesImage - tailleBloc and j == numberColumnsImage - tailleBloc :
 					dictionnaryOfprototypes["metaData"].append(int(i/tailleBloc)+ 1 )
 					dictionnaryOfprototypes["metaData"].append(int(j/tailleBloc)+ 1 )
@@ -91,8 +91,8 @@ def dictionnaryOfprototypeToImage(dictionnaryOfprototypes, tailleBloc, rgb=False
 		image = np.zeros((numberLinesImage, numberColumnsImage), np.uint8)
 	for i in range(0, numberLinesImage - tailleBloc + 1, tailleBloc):
 		for j in range(0, numberColumnsImage - tailleBloc + 1, tailleBloc):
-			indexOfBloc = str(int(i/tailleBloc)) + "," +  str(int(j/tailleBloc))
-			flattenedBloc = dictionnaryOfprototypes[indexOfBloc]
+			indexBloc = str(int(i/tailleBloc)) + "," +  str(int(j/tailleBloc))
+			flattenedBloc = dictionnaryOfprototypes[indexBloc]
 			bloc = flattenedBlocToBloc(flattenedBloc, rgb)
 			image[i : i + tailleBloc, j : j + tailleBloc] = bloc
 	print("Image reconstruite")
