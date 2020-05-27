@@ -17,6 +17,8 @@ image = dictionnaryOfprototypeToImage(dictionnaryOfprototypes, tailleBloc)
 
 
 
-calculGravityCenterBloc(dictionnaryOfprototypes, tailleBloc)
-cv2.imshow('Image Recontruite a partir du dictionnaire de prototypes', image)
-cv2.waitKey(0)
+gravityCenterBloc = calculGravityCenterBloc(dictionnaryOfprototypes, tailleBloc)
+splitVector(gravityCenterBloc, tailleBloc)
+
+# cv2.imshow('Image Recontruite a partir du dictionnaire de prototypes', image)
+# cv2.waitKey(0)

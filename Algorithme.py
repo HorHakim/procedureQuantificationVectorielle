@@ -13,12 +13,23 @@ def calculGravityCenterBloc(dictionnaryOfprototypes, tailleBloc):
 	numberColumnsBlocs = dictionnaryOfprototypes["metaData"][1]
 	numberTotalBlocks = numberLinesBlocs*numberColumnsBlocs
 	tailleGravityCenterBloc = tailleBloc**2
-	gravityCenterBloc = np.zeros((tailleGravityCenterBloc))
+	
+	gravityCenterBloc = np.zeros((tailleGravityCenterBloc))	
 	for i in range(numberLinesBlocs):
 		for j in range(numberColumnsBlocs):
 			indexBloc = str(int(i/tailleBloc)) + "," +  str(int(j/tailleBloc))
 			gravityCenterBloc += dictionnaryOfprototypes[indexBloc]
+	
 	gravityCenterBloc /= numberTotalBlocks
-	print(gravityCenterBloc)
+
 	return gravityCenterBloc
 
+
+def splitVector(gravityCenterBloc, tailleBloc):
+	epsilonShape = gravityCenterBloc.shape
+	epsilon = np.random.random_sample(epsilonShape)
+	
+	gravityCenterBloc1 = gravityCenterBloc + epsilon
+	gravityCenterBloc2 = gravityCenterBloc - epsilon
+	
+	return gravityCenterBloc1, gravityCenterBloc2
