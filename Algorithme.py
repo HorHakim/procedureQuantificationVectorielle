@@ -40,7 +40,6 @@ def calculGravityCenterBloc(dictionnary):
 			gravityCenterBloc = np.zeros((tailleGravityCenterBloc))	
 		 
 		dictionnary["metaData"]["UpToDateCentresOfGravity"] == True
-		print("Les centres de gravité sont maintenant à jour")
 		return dictionnary
 	else : 
 		print("error")
@@ -109,13 +108,36 @@ def createDictionnaryPrototype(dictionnaryFlattenedBlocsImage):
 
 
 def lbg(dictionnaryFlattenedBlocsImage, numberIteration):
-	# dictionnaryPrototype = createDictionnaryPrototype(dictionnaryFlattenedBlocsImage)
-	# tailleBloc = dictionnaryPrototype["metaData"]["tailleBloc"]
-	# rgb = dictionnaryPrototype["metaData"]["rgb"]
+	dictionnaryPrototype = createDictionnaryPrototype(dictionnaryFlattenedBlocsImage)
+	tailleBloc = dictionnaryPrototype["metaData"]["tailleBloc"]
+	rgb = dictionnaryPrototype["metaData"]["rgb"]
 
-	# for iteration in range(numberIteration):
-	# 	numberPrototypes = dictionnaryPrototype["metaData"]["numberPrototypes"]
-	# 	for k in range(numberPrototypes):
-	# 		gravityCenterBlocPlusEpsilon, gravityCenterBlocMoinsEpsilon = splitVector(dictionnaryPrototype["Prototype" + str(k)][0], tailleBloc)
-	return None
+	for iteration in range(numberIteration):
+		numberPrototypes = dictionnaryPrototype["metaData"]["numberPrototypes"]
+		listGravityCenters = []
+		listsIndexBlocs = []
+		for k in range(numberPrototypes):
+			listIndexBlocsPlus = []
+			listIndexBlocsMoins = []
+			gravityCenterBlocPlus, gravityCenterBlocMoins = splitVector(dictionnaryPrototype["Prototype" + str(k)][0], tailleBloc)
+			listGravityCenters.append(gravityCenterBlocPlus)
+			listGravityCenters.append(gravityCenterBlocMoins)
+			for indexBloc in dictionnaryPrototype["Prototype" + str(k)][1]:
+				distEpsilonPlus = np.linalg.norm(dictionnaryFlattenedBlocsImage[indexBloc]-gravityCenterBlocPlus) 
+				distEpsilonMoins = np.linalg.norm(dictionnaryFlattenedBlocsImage[indexBloc]-gravityCenterBlocMoins)
+				if distEpsilonPlus > distEpsilonMoins:
+					listIndexBlocsMoins.append(indexBloc)
+				else:
+					listIndexBlocsPlus.append(indexBloc)
+			listsIndexBlocs.append(listIndexBlocsPlus)
+			listsIndexBlocs.append(listIndexBlocsMoins)
+			del dictionnaryPrototype["Prototype" + str(k)]
+		for k in range(numberPrototypes*2):
+			dictionnaryPrototype["Prototype" + str(k)] = [listGravityCenters[k], listsIndexBlocs[k]]
+		dictionnaryPrototype["metaData"]["numberPrototypes"] *= 2
+		dictionnaryPrototype["metaData"]["UpToDateCentresOfGravity"] = False
+		dictionnaryPrototype = calculGravityCenterBloc(dictionnaryPrototype)
+
+	return dictionnaryPrototype
+
 
