@@ -82,6 +82,8 @@ def imageToDictionnaryFlattenedBlocsImage(pathImage, tailleBloc, rgb=False):
 	dictionnaryFlattenedBlocsImage = dict()
 	dictionnaryFlattenedBlocsImage["metaData"] = dict()
 	dictionnaryFlattenedBlocsImage["metaData"]["typeDictionnary"] = "DictionnaryFlattenedBlocsImage"
+	dictionnaryFlattenedBlocsImage["metaData"]["numberLinesImage"] = numberLinesImage
+	dictionnaryFlattenedBlocsImage["metaData"]["numberColumnsImage"] = numberColumnsImage 
 	dictionnaryFlattenedBlocsImage["metaData"]["numberLinesBlocs"] = int((numberLinesImage - tailleBloc)/tailleBloc)+ 1 
 	dictionnaryFlattenedBlocsImage["metaData"]["numberColumnsBlocs"]= int((numberColumnsImage - tailleBloc)/tailleBloc)+ 1 
 	dictionnaryFlattenedBlocsImage["metaData"]["tailleBloc"] = tailleBloc
@@ -132,4 +134,43 @@ def dictionnaryFlattenedBlocsImageToImage(dictionnaryFlattenedBlocsImage):
 	
 	return image
 
+
+def indexBlocToPostion(indexBloc, tailleBloc):
+	L = indexBloc.split(",")
+	positionBloc = [int(L[0])*tailleBloc, int(L[1])*tailleBloc]
+	return positionBloc
+
+
+def pasteBlocOnImage(flattenedPrototype, indexBloc, numberLinesImage, numberColumnsImage, tailleBloc, rgb):
+	if rgb:
+		image = np.zeros((numberLinesImage, numberColumnsImage, 3), np.uint8)
+	else:
+		image = np.zeros((numberLinesImage, numberColumnsImage), np.uint8)
+	bloc = flattenedBlocToBloc(flattenedPrototype)
+	i, j = indexBlocToPostion(indexBloc, tailleBloc)
+	image[i : i + tailleBloc, j : j + tailleBloc] = bloc
+	return image
+
+
+
+def lectureDictionnaryPrototype(dictionnaryPrototype):
+	numberLinesImage = dictionnaryPrototype["metaData"]["numberLinesImage"]
+	numberColumnsImage = dictionnaryPrototype["metaData"]["numberColumnsImage"]
+	tailleBloc = dictionnaryPrototype["metaData"]["tailleBloc"]
+	rgb = dictionnaryPrototype["metaData"]["rgb"]
+	numberLinesBlocs = dictionnaryPrototype["metaData"]["numberLinesBlocs"]
+	numberColumnsBlocs = dictionnaryPrototype["metaData"]["numberColumnsBlocs"]
+	numberPrototypes = dictionnaryPrototype["metaData"]["numberPrototypes"]
+	
+	if rgb:
+		image = np.zeros((numberLinesImage, numberColumnsImage, 3), np.uint8)
+	else:
+		image = np.zeros((numberLinesImage, numberColumnsImage), np.uint8)
+	for k in range(numberPrototypes):
+		flattenedPrototype = np.around(dictionnaryPrototype["Prototype" + str(k)][0])
+		flattenedPrototype = flattenedPrototype.astype(int)
+		for indexBloc in dictionnaryPrototype["Prototype" + str(k)][1]:
+			image += pasteBlocOnImage(flattenedPrototype, indexBloc, numberLinesImage, numberColumnsImage, tailleBloc, rgb)
+
+	return image
 

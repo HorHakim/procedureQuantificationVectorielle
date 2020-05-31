@@ -66,6 +66,8 @@ def createDictionnaryPrototype(dictionnaryFlattenedBlocsImage):
 		dictionnaryPrototype["metaData"]["typeDictionnary"] = "dictionnaryPrototype"
 		dictionnaryPrototype["metaData"]["tailleBloc"] = dictionnaryFlattenedBlocsImage["metaData"]["tailleBloc"]
 		dictionnaryPrototype["metaData"]["rgb"] = dictionnaryFlattenedBlocsImage["metaData"]["rgb"]
+		dictionnaryPrototype["metaData"]["numberLinesImage"] = dictionnaryFlattenedBlocsImage["metaData"]["numberLinesImage"]
+		dictionnaryPrototype["metaData"]["numberColumnsImage"] = dictionnaryFlattenedBlocsImage["metaData"]["numberColumnsImage"]
 		dictionnaryPrototype["metaData"]["numberLinesBlocs"]= dictionnaryFlattenedBlocsImage["metaData"]["numberLinesBlocs"]
 		dictionnaryPrototype["metaData"]["numberColumnsBlocs"] = dictionnaryFlattenedBlocsImage["metaData"]["numberColumnsBlocs"]
 		dictionnaryPrototype["metaData"]["numberPrototypes"] = 2
@@ -104,18 +106,16 @@ def createDictionnaryPrototype(dictionnaryFlattenedBlocsImage):
 
 
 
-# def majDictionnaryPrototype(dictionnaryPrototype):
-# 	dictionnaryPrototypeNextIteration = dict()
-# 	for key, value in dictionnaryPrototype.items():
-		
 
 
-# 	return None
+def lbg(dictionnaryFlattenedBlocsImage, numberIteration):
+	# dictionnaryPrototype = createDictionnaryPrototype(dictionnaryFlattenedBlocsImage)
+	# tailleBloc = dictionnaryPrototype["metaData"]["tailleBloc"]
+	# rgb = dictionnaryPrototype["metaData"]["rgb"]
 
-
-
-def lbg(dictionnaryFlattenedBlocsImage):
-	dictionnaryPrototype = createDictionnaryPrototype(dictionnaryFlattenedBlocsImage)
-
-
+	# for iteration in range(numberIteration):
+	# 	numberPrototypes = dictionnaryPrototype["metaData"]["numberPrototypes"]
+	# 	for k in range(numberPrototypes):
+	# 		gravityCenterBlocPlusEpsilon, gravityCenterBlocMoinsEpsilon = splitVector(dictionnaryPrototype["Prototype" + str(k)][0], tailleBloc)
 	return None
+
