@@ -71,50 +71,64 @@ def flattenedBlocToBloc(flattenedBloc, rgb=False):
 	return Bloc
 
 
-def imageToDictionnaryOfprototype(pathImage, tailleBloc, rgb=False):
+def imageToDictionnaryFlattenedBlocsImage(pathImage, tailleBloc, rgb=False):
 	"""
-	->	Elle divise une image en bloc, applatit les blocs, les stocque dans un dictionnaire qu'elle renvoit. 
+	->  Divise une image en bloc, applatit les blocs, les stocke dans un dictionnaire qu'elle renvoit. 
 		Les blocs applatits sont indexés dans le dictionnaire en fonction de leur position.
 	"""
 	image, numberLinesImage, numberColumnsImage = loadImage(pathImage, tailleBloc, rgb)
 	numberBlocs = (int(numberLinesImage/tailleBloc), int(numberColumnsImage/tailleBloc))
 	
-	dictionnaryOfprototypes = dict()
-	dictionnaryOfprototypes["metaData"] = []
+	dictionnaryFlattenedBlocsImage = dict()
+	dictionnaryFlattenedBlocsImage["metaData"] = dict()
+	dictionnaryFlattenedBlocsImage["metaData"]["typeDictionnary"] = "DictionnaryFlattenedBlocsImage"
+	dictionnaryFlattenedBlocsImage["metaData"]["numberLinesBlocs"] = int((numberLinesImage - tailleBloc)/tailleBloc)+ 1 
+	dictionnaryFlattenedBlocsImage["metaData"]["numberColumnsBlocs"]= int((numberColumnsImage - tailleBloc)/tailleBloc)+ 1 
+	dictionnaryFlattenedBlocsImage["metaData"]["tailleBloc"] = tailleBloc
+	dictionnaryFlattenedBlocsImage["metaData"]["rgb"] = rgb
 	for i in range(0, numberLinesImage - tailleBloc + 1, tailleBloc):
 		for j in range(0, numberColumnsImage - tailleBloc + 1, tailleBloc):
 				indexBloc = str(int(i/tailleBloc)) + "," +  str(int(j/tailleBloc))
 				bloc = image[i : i + tailleBloc, j : j + tailleBloc]
 				flattenedBloc = blocToFlattenedBloc(bloc, rgb)
-				dictionnaryOfprototypes[indexBloc] = flattenedBloc
-				if i == numberLinesImage - tailleBloc and j == numberColumnsImage - tailleBloc :
-					dictionnaryOfprototypes["metaData"].append(int(i/tailleBloc)+ 1 )
-					dictionnaryOfprototypes["metaData"].append(int(j/tailleBloc)+ 1 )
+				dictionnaryFlattenedBlocsImage[indexBloc] = flattenedBloc
+
+
 	
 	print("Le dictionnaire de prototype est maintenant construit.")
 	
-	return dictionnaryOfprototypes
+	return dictionnaryFlattenedBlocsImage
 
 
-def dictionnaryOfprototypeToImage(dictionnaryOfprototypes, tailleBloc, rgb=False):
-	numberLinesBlocs = dictionnaryOfprototypes["metaData"][0]
-	numberColumnsBlocs = dictionnaryOfprototypes["metaData"][1]
-	numberLinesImage = numberLinesBlocs*tailleBloc
-	numberColumnsImage = numberColumnsBlocs*tailleBloc
+def dictionnaryFlattenedBlocsImageToImage(dictionnaryFlattenedBlocsImage):
 	
-	if rgb:
-		image = np.zeros((numberLinesImage, numberColumnsImage, 3), np.uint8)
-	else:
-		image = np.zeros((numberLinesImage, numberColumnsImage), np.uint8)
-	
-	for i in range(0, numberLinesImage - tailleBloc + 1, tailleBloc):
-		for j in range(0, numberColumnsImage - tailleBloc + 1, tailleBloc):
-			indexBloc = str(int(i/tailleBloc)) + "," +  str(int(j/tailleBloc))
-			flattenedBloc = dictionnaryOfprototypes[indexBloc]
-			bloc = flattenedBlocToBloc(flattenedBloc, rgb)
-			image[i : i + tailleBloc, j : j + tailleBloc] = bloc
-	
-	print("Image reconstruite")
+	if dictionnaryFlattenedBlocsImage["metaData"]["typeDictionnary"] == "DictionnaryFlattenedBlocsImage" :
+		
+		numberLinesBlocs = dictionnaryFlattenedBlocsImage["metaData"]["numberLinesBlocs"]
+		numberColumnsBlocs = dictionnaryFlattenedBlocsImage["metaData"]["numberColumnsBlocs"]
+		tailleBloc = dictionnaryFlattenedBlocsImage["metaData"]["tailleBloc"]
+		rgb = dictionnaryFlattenedBlocsImage["metaData"]["rgb"]
+		
+		numberLinesImage = numberLinesBlocs*tailleBloc
+		numberColumnsImage = numberColumnsBlocs*tailleBloc
+		
+		if rgb:
+			image = np.zeros((numberLinesImage, numberColumnsImage, 3), np.uint8)
+		else:
+			image = np.zeros((numberLinesImage, numberColumnsImage), np.uint8)
+		
+		for i in range(0, numberLinesImage - tailleBloc + 1, tailleBloc):
+			for j in range(0, numberColumnsImage - tailleBloc + 1, tailleBloc):
+				indexBloc = str(int(i/tailleBloc)) + "," +  str(int(j/tailleBloc))
+				flattenedBloc = dictionnaryFlattenedBlocsImage[indexBloc]
+				bloc = flattenedBlocToBloc(flattenedBloc, rgb)
+				image[i : i + tailleBloc, j : j + tailleBloc] = bloc
+		
+		print("Image reconstruite")
+	else :
+		image = None
+		print("La fonction : dictionnaryFlattenedBlocsImageToImage() ne gère pas ce format de dictionnaire en entrée.")
+		print("Echec du processus !")
 	
 	return image
 

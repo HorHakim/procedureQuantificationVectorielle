@@ -10,15 +10,16 @@ pathImage = "cartman.png"
 tailleBloc = 16
 rgb = True
 
-
-dictionnaryOfprototypes = imageToDictionnaryOfprototype(pathImage, tailleBloc)
-image = dictionnaryOfprototypeToImage(dictionnaryOfprototypes, tailleBloc)
-#print(dictionnaryOfprototypes["metaData"])
-
+dictionnaryFlattenedBlocsImage = imageToDictionnaryFlattenedBlocsImage(pathImage, tailleBloc)
+image = dictionnaryFlattenedBlocsImageToImage(dictionnaryFlattenedBlocsImage)
+#print(dictionnaryFlattenedBlocsImage["metaData"])
 
 
-gravityCenterBloc = calculGravityCenterBloc(dictionnaryOfprototypes, tailleBloc)
-splitVector(gravityCenterBloc, tailleBloc)
 
-# cv2.imshow('Image Recontruite a partir du dictionnaire de prototypes', image)
-# cv2.waitKey(0)
+#gravityCenterBloc = calculGravityCenterBloc(dictionnaryFlattenedBlocsImage, tailleBloc)
+#splitVector(gravityCenterBloc, tailleBloc)
+dictionnaryPrototype = createDictionnaryPrototype(dictionnaryFlattenedBlocsImage) # Initialise un dictionnaire de prototype
+# print(len(dictionnaryPrototype["gravityCenterBlocPlus"][1]))
+# print(len(dictionnaryPrototype["gravityCenterBlocMoins"][1]))
+#cv2.imshow('Image Recontruite a partir du dictionnaire de prototypes', image)
+#cv2.waitKey(0)
