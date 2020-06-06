@@ -5,19 +5,22 @@ Author : Cécilia Hakim Zacharie
 """
 from generatorDictionnary import *
 from Algorithme import *
+from Training import *
 ### Variable du programme 
 pathImage = "cartman.png"
 tailleBloc = 16
-rgb = True
+rgb = False
 
 
+#print(creatorBatch(tailleBloc, rgb=False))
+training(tailleBloc, 10)
 
-print(indexBlocToPostion("12,54", 16))
-dictionnaryFlattenedBlocsImage = imageToDictionnaryFlattenedBlocsImage(pathImage, tailleBloc)
-dictionnaryPrototype = lbg(dictionnaryFlattenedBlocsImage, 1)
-image = lectureDictionnaryPrototype(dictionnaryPrototype)
-cv2.imshow('Image Recontruite a partir du dictionnaire de prototypes', image)
-cv2.waitKey(0)
+
+# dictionnaryFlattenedBlocsImage = imageToDictionnaryFlattenedBlocsImage(pathImage, tailleBloc)
+# dictionnaryPrototype = lbg(dictionnaryFlattenedBlocsImage, 15)
+# image = lectureDictionnaryPrototype(dictionnaryPrototype)
+# cv2.imshow('Image Recontruite a partir du dictionnaire de prototypes', image)
+# cv2.waitKey(0)
 #image = dictionnaryFlattenedBlocsImageToImage(dictionnaryFlattenedBlocsImage)
 #print(dictionnaryFlattenedBlocsImage["metaData"])
 

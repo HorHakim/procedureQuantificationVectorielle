@@ -7,6 +7,7 @@ Author : Cécilia Hakim Zacharie
 import cv2
 import math
 import numpy as np
+import os
 
 ### Fonctions utiles ###
 
@@ -133,6 +134,42 @@ def dictionnaryFlattenedBlocsImageToImage(dictionnaryFlattenedBlocsImage):
 		print("Echec du processus !")
 	
 	return image
+
+
+def creatorBatch(tailleBloc, rgb=False):
+	"""renvoie une grande image contenant toutes les images"""
+	pathBdd = "./bdd"
+	pathsImages = os.listdir(pathBdd)
+	for k in range (len(pathsImages)):
+		pathsImages[k] = pathBdd + "/" + pathsImages[k]
+
+	batchDictionnaryFlattenedBlocsImage = dict()
+	batchDictionnaryFlattenedBlocsImage["metaData"] = dict()
+	batchDictionnaryFlattenedBlocsImage["metaData"]["typeDictionnary"] = "DictionnaryFlattenedBlocsImage"
+	batchDictionnaryFlattenedBlocsImage["metaData"]["numberLinesImage"] = 0
+	batchDictionnaryFlattenedBlocsImage["metaData"]["numberColumnsImage"] = 16
+	batchDictionnaryFlattenedBlocsImage["metaData"]["numberLinesBlocs"] = 0
+	batchDictionnaryFlattenedBlocsImage["metaData"]["numberColumnsBlocs"]= 1 
+	batchDictionnaryFlattenedBlocsImage["metaData"]["tailleBloc"] = tailleBloc
+	batchDictionnaryFlattenedBlocsImage["metaData"]["rgb"] = rgb
+	compteur = 0
+	for pathImage in pathsImages :
+		dictionnaryFlattenedBlocsImage = imageToDictionnaryFlattenedBlocsImage(pathImage, tailleBloc, rgb)
+		for indexBloc, flattenedBloc in dictionnaryFlattenedBlocsImage.items(): 
+			if indexBloc == "metaData":
+				pass
+			else : 
+				indexBlocLine  = int(indexBloc.split(",")[0]) + batchDictionnaryFlattenedBlocsImage["metaData"]["numberLinesBlocs"]
+				indexBlocColumn = int(indexBloc.split(",")[1]) + batchDictionnaryFlattenedBlocsImage["metaData"]["numberColumnsBlocs"]
+				batchDictionnaryFlattenedBlocsImage[str(compteur) + "," + "0"] = flattenedBloc
+				compteur += 1
+
+
+		batchDictionnaryFlattenedBlocsImage["metaData"]["numberLinesImage"] += dictionnaryFlattenedBlocsImage["metaData"]["numberLinesImage"] * dictionnaryFlattenedBlocsImage["metaData"]["numberColumnsImage"]
+		batchDictionnaryFlattenedBlocsImage["metaData"]["numberLinesBlocs"] += dictionnaryFlattenedBlocsImage["metaData"]["numberLinesBlocs"] * dictionnaryFlattenedBlocsImage["metaData"]["numberColumnsBlocs"]
+
+		
+	return batchDictionnaryFlattenedBlocsImage
 
 
 def indexBlocToPostion(indexBloc, tailleBloc):

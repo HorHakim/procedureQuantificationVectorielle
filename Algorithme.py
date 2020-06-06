@@ -35,9 +35,12 @@ def calculGravityCenterBloc(dictionnary):
 			for indexBloc in dictionnary[indexPrototype][1] :
 				gravityCenterBloc += dictionnary["dictionnaryFlattenedBlocsImage"][indexBloc]
 			numberTotalBlocs = len(dictionnary[indexPrototype][1])
-			gravityCenterBloc /= numberTotalBlocs
-			dictionnary[indexPrototype][0] = gravityCenterBloc
-			gravityCenterBloc = np.zeros((tailleGravityCenterBloc))	
+			if numberTotalBlocs != 0:
+				gravityCenterBloc /= numberTotalBlocs
+				dictionnary[indexPrototype][0] = gravityCenterBloc
+				gravityCenterBloc = np.zeros((tailleGravityCenterBloc))
+			else:
+				pass	
 		 
 		dictionnary["metaData"]["UpToDateCentresOfGravity"] == True
 		return dictionnary
