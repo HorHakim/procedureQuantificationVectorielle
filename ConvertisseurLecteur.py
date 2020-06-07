@@ -28,7 +28,7 @@ def convert(pathImage, tailleBloc, rgb=False):
 					if distBlocPrototype < distMin : 
 						dictImage[indexbloc] = numPrototype[9:]
 						distMin = distBlocPrototype
-		with open(pathImage+'Prototype', 'wb') as fichier:
+		with open(pathImage.split(".")[0] + 'Prototype', 'wb') as fichier:
 			mon_pickler = pickle.Pickler(fichier)
 			mon_pickler.dump(dictImage)
 	return None

@@ -3,38 +3,20 @@
 Author : Cécilia Hakim Zacharie
 
 """
-from generatorDictionnary import *
-from Algorithme import *
+
 from Training import *
 from ConvertisseurLecteur import *
+
 ### Variable du programme 
 pathImage = "cartman.png"
 tailleBloc = 16
 rgb = False
 
 
-#print(creatorBatch(tailleBloc, rgb=False))
 #training(tailleBloc, 14)
 #convert(pathImage, tailleBloc)
-lecture("cartman.pngPrototype")
+lecture("cartmanPrototype")
 
 
 
-# dictionnaryFlattenedBlocsImage = imageToDictionnaryFlattenedBlocsImage(pathImage, tailleBloc)
-# dictionnaryPrototype = lbg(dictionnaryFlattenedBlocsImage, 15)
-# image = lectureDictionnaryPrototype(dictionnaryPrototype)
-# cv2.imshow('Image Recontruite a partir du dictionnaire de prototypes', image)
-# cv2.waitKey(0)
-#image = dictionnaryFlattenedBlocsImageToImage(dictionnaryFlattenedBlocsImage)
-#print(dictionnaryFlattenedBlocsImage["metaData"])
-
-
-#gravityCenterBloc = calculGravityCenterBloc(dictionnaryFlattenedBlocsImage, tailleBloc)
-#splitVector(gravityCenterBloc, tailleBloc)
-#dictionnaryPrototype = createDictionnaryPrototype(dictionnaryFlattenedBlocsImage) # Initialise un dictionnaire de prototype
-#image = lectureDictionnaryPrototype(dictionnaryPrototype)
-#print(image)
-
-# print(len(dictionnaryPrototype["gravityCenterBlocPlus"][1]))
-# print(len(dictionnaryPrototype["gravityCenterBlocMoins"][1]))
 
