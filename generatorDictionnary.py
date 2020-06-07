@@ -19,9 +19,7 @@ def loadImage(pathImage, tailleBloc, rgb=False):
 		imageLoaded = cv2.imread(pathImage)
 	else: 
 		imageLoaded = cv2.imread(pathImage, 0)
-	
-	print("Chargement de l'image effectué.")
-	
+		
 	if imageLoaded.shape[0] % tailleBloc  < tailleBloc/2 :
 		numberLinesImage = imageLoaded.shape[0] - (imageLoaded.shape[0] % tailleBloc )
 	else:
@@ -33,8 +31,6 @@ def loadImage(pathImage, tailleBloc, rgb=False):
 		numberColumnsImage= imageLoaded.shape[1]  - (imageLoaded.shape[1] % tailleBloc) + tailleBloc
 	
 	image = cv2.resize(imageLoaded,(numberColumnsImage, numberLinesImage))
-	
-	print("L'image est maintenant confome pour être cadrillée.")
 	
 	return image, numberLinesImage, numberColumnsImage
 
@@ -95,10 +91,6 @@ def imageToDictionnaryFlattenedBlocsImage(pathImage, tailleBloc, rgb=False):
 				bloc = image[i : i + tailleBloc, j : j + tailleBloc]
 				flattenedBloc = blocToFlattenedBloc(bloc, rgb)
 				dictionnaryFlattenedBlocsImage[indexBloc] = flattenedBloc
-
-
-	
-	print("Le dictionnaire de prototype est maintenant construit.")
 	
 	return dictionnaryFlattenedBlocsImage
 
@@ -138,8 +130,11 @@ def dictionnaryFlattenedBlocsImageToImage(dictionnaryFlattenedBlocsImage):
 
 def creatorBatch(tailleBloc, rgb=False):
 	"""renvoie une grande image contenant toutes les images"""
+	print("Création du batch pour l'entrainement.")
 	pathBdd = "./bdd"
 	pathsImages = os.listdir(pathBdd)
+	nombreImage = len(pathsImages)
+	print("nombre total d'image à charger :", nombreImage)
 	for k in range (len(pathsImages)):
 		pathsImages[k] = pathBdd + "/" + pathsImages[k]
 
@@ -153,6 +148,7 @@ def creatorBatch(tailleBloc, rgb=False):
 	batchDictionnaryFlattenedBlocsImage["metaData"]["tailleBloc"] = tailleBloc
 	batchDictionnaryFlattenedBlocsImage["metaData"]["rgb"] = rgb
 	compteur = 0
+	nbImageChargee = 0
 	for pathImage in pathsImages :
 		dictionnaryFlattenedBlocsImage = imageToDictionnaryFlattenedBlocsImage(pathImage, tailleBloc, rgb)
 		for indexBloc, flattenedBloc in dictionnaryFlattenedBlocsImage.items(): 
@@ -163,12 +159,14 @@ def creatorBatch(tailleBloc, rgb=False):
 				indexBlocColumn = int(indexBloc.split(",")[1]) + batchDictionnaryFlattenedBlocsImage["metaData"]["numberColumnsBlocs"]
 				batchDictionnaryFlattenedBlocsImage[str(compteur) + "," + "0"] = flattenedBloc
 				compteur += 1
+		nbImageChargee += 1
+		print("image :", nbImageChargee,'/', nombreImage)
 
 
 		batchDictionnaryFlattenedBlocsImage["metaData"]["numberLinesImage"] += dictionnaryFlattenedBlocsImage["metaData"]["numberLinesImage"] * dictionnaryFlattenedBlocsImage["metaData"]["numberColumnsImage"]
 		batchDictionnaryFlattenedBlocsImage["metaData"]["numberLinesBlocs"] += dictionnaryFlattenedBlocsImage["metaData"]["numberLinesBlocs"] * dictionnaryFlattenedBlocsImage["metaData"]["numberColumnsBlocs"]
 
-		
+	print("Création du batch pour l'entrainement réalisé avec succès")
 	return batchDictionnaryFlattenedBlocsImage
 
 

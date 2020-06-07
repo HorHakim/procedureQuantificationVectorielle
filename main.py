@@ -6,6 +6,7 @@ Author : Cécilia Hakim Zacharie
 from generatorDictionnary import *
 from Algorithme import *
 from Training import *
+from ConvertisseurLecteur import *
 ### Variable du programme 
 pathImage = "cartman.png"
 tailleBloc = 16
@@ -13,7 +14,10 @@ rgb = False
 
 
 #print(creatorBatch(tailleBloc, rgb=False))
-training(tailleBloc, 10)
+#training(tailleBloc, 14)
+#convert(pathImage, tailleBloc)
+lecture("cartman.pngPrototype")
+
 
 
 # dictionnaryFlattenedBlocsImage = imageToDictionnaryFlattenedBlocsImage(pathImage, tailleBloc)

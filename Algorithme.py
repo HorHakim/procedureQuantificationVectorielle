@@ -116,6 +116,7 @@ def lbg(dictionnaryFlattenedBlocsImage, numberIteration):
 	rgb = dictionnaryPrototype["metaData"]["rgb"]
 
 	for iteration in range(numberIteration):
+		print("Epoch n°", iteration)
 		numberPrototypes = dictionnaryPrototype["metaData"]["numberPrototypes"]
 		listGravityCenters = []
 		listsIndexBlocs = []
@@ -140,6 +141,7 @@ def lbg(dictionnaryFlattenedBlocsImage, numberIteration):
 		dictionnaryPrototype["metaData"]["numberPrototypes"] *= 2
 		dictionnaryPrototype["metaData"]["UpToDateCentresOfGravity"] = False
 		dictionnaryPrototype = calculGravityCenterBloc(dictionnaryPrototype)
+		print("Fin de l'epoch n°", iteration)
 
 	return dictionnaryPrototype
 
